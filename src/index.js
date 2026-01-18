@@ -1,7 +1,7 @@
 // src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';  // ← Important: import from /client
-import './index.css';                     // Keep if you have it, or remove
+//import './index.css';                     // Keep if you have it, or remove
 import App from './App';
 // import reportWebVitals from './reportWebVitals';  // optional
 
