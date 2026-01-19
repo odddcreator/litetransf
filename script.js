@@ -126,12 +126,42 @@ async function loadMedia() {
       ? "<p>No media yet.</p>"
       : media.map(m => `
         <div class="item">
-          <a href="${API}/uploads/download/${m._id}" target="_blank">Download</a>
+          <button onclick="downloadMedia('${m._id}')">Download</button>
           <small>${new Date(m.timestamp).toLocaleString()}</small>
         </div>
       `).join("");
   } catch {
     list.innerHTML = "<p>Error loading media.</p>";
+  }
+}
+
+async function downloadMedia(id) {
+  if (!token) return alert("Not authenticated");
+  try {
+    const res = await fetch(`${API}/uploads/download/${id}`, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (res.status === 401) throw new Error("Unauthorized");
+    if (!res.ok) throw new Error(await res.text());
+
+    const blob = await res.blob();
+    const cd = res.headers.get('content-disposition');
+    let filename = id;
+    if (cd) {
+      const match = /filename="?(.*?)"?($|;)/.exec(cd);
+      if (match) filename = match[1];
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert("Error: " + err.message);
   }
 }
 
