@@ -172,7 +172,25 @@ async function checkPremium() {
   $("premium-status").textContent = "You are on the Free plan (premium check not implemented yet)";
 }
 
-$("subscribe-btn").onclick = () => {
-  alert("Premium subscription → redirect to Stripe checkout (to be implemented)");
-  // Real version: fetch(API + "/payments/create-checkout-session") → stripe.redirectToCheckout
+$("subscribe-btn").onclick = async () => {
+  if (!token) return alert("Login first");
+
+  try {
+    const res = await fetch(API + "/payments/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!res.ok) throw new Error('Could not create checkout session');
+    const { id } = await res.json();
+
+    // ensure Stripe.js is loaded and STRIPE_PUBLISHABLE_KEY is set in your frontend env
+    const stripe = Stripe(window.STRIPE_PUBLISHABLE_KEY);
+    const { error } = await stripe.redirectToCheckout({ sessionId: id });
+    if (error) alert(error.message);
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
 };
