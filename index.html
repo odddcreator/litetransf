@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LiteTransf – Quick Transfer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>LITETRANSSF</h1>
+  </header>
+
+  <main id="app" class="hidden">
+    <nav>
+      <button class="tab active" data-tab="upload">UPLOAD</button>
+      <button class="tab" data-tab="texts">MY TEXTS</button>
+      <button class="tab" data-tab="media">MY MEDIA</button>
+      <button class="tab premium-btn" data-tab="premium">PREMIUM</button>
+    </nav>
+
+    <!-- UPLOAD tab -->
+    <section id="upload" class="tab-content active">
+      <h2>Upload Text</h2>
+      <textarea id="text-input" placeholder="Paste or type text here..." rows="6"></textarea>
+      <button id="upload-text">Upload Text</button>
+
+      <h2>Upload File / Image / Video</h2>
+      <input type="file" id="file-input">
+      <button id="upload-file">Upload File</button>
+    </section>
+
+    <!-- MY TEXTS tab -->
+    <section id="texts" class="tab-content">
+      <div id="texts-list"></div>
+    </section>
+
+    <!-- MY MEDIA tab -->
+    <section id="media" class="tab-content">
+      <div id="media-list"></div>
+    </section>
+
+    <!-- PREMIUM tab -->
+    <section id="premium" class="tab-content">
+      <h2>Go Premium – $9/month</h2>
+      <p>• 50 uploads/day instead of 10<br>• 1 GB files instead of 20 MB<br>• Files never expire<br>• 20,000 characters text instead of 1,000</p>
+
+      <button id="subscribe-btn">Subscribe Now</button>
+      <p id="premium-status">You are on the Free plan</p>
+    </section>
+  </main>
+
+  <div id="login-screen">
+    <div class="login-box">
+      <h1>LITETRANSSF</h1>
+      <p>Transfer text & media between devices — instantly</p>
+      <button id="google-login">Sign in with Google</button>
+      <p class="small">No password • Secure • Fast</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
