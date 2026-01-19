@@ -1,4 +1,4 @@
-const API = "http://localhost:3000";   // ← change to your real backend URL later
+const API = "https://litetransf-backend.onrender.com";   // ← change to your real backend URL later
 let token = localStorage.getItem("token");
 
 const $ = id => document.getElementById(id);
