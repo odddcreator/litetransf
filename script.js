@@ -3,8 +3,6 @@ let token = localStorage.getItem("token");
 
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
-const decoded = jwt.decode(token, { complete: true });
-console.log(decoded);
 
 // ── Tabs ───────────────────────────────────────────────
 $$(".tab").forEach(btn => {
