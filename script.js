@@ -66,6 +66,10 @@ $("upload-text").onclick = async () => {
 $("upload-file").onclick = async () => {
   const file = $("file-input").files[0];
   if (!file) return alert("Select a file");
+  if (!token) return alert("Not authenticated — please sign in");
+
+  // brief debug: show partial token in console
+  console.log("Uploading file; token present:", Boolean(token), "token-preview:", token ? token.slice(0,16) + "..." : null);
 
   const formData = new FormData();
   formData.append("file", file);
