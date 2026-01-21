@@ -169,6 +169,20 @@ async function downloadMedia(id) {
   }
 }
 
+// ── Logout ─────────────────────────────────────────────
+$("logout-btn").onclick = () => {
+  localStorage.removeItem("token"); // Remove token from local storage
+  token = null;
+  $("login-screen").classList.remove("hidden");
+  $("app").classList.add("hidden");
+  $("logout-btn").classList.add("hidden"); // Hide the logout button
+};
+
+// Show the logout button if the user is logged in
+if (token) {
+  $("logout-btn").classList.remove("hidden");
+}
+
 // ── Premium (very basic – real Stripe needs more code) ──
 async function checkPremium() {
   // You can add /me endpoint later to return isPremium
