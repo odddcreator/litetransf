@@ -190,8 +190,23 @@ async function checkPremium() {
   $("premium-status").textContent = "You are on the Free plan (premium check not implemented yet)";
 }
 
+let stripe;
+
+(async () => {
+  try {
+    const res = await fetch(`${API}/payments/stripe-key`);
+    if (!res.ok) throw new Error('Failed to fetch Stripe publishable key');
+    const { publishableKey } = await res.json();
+    stripe = Stripe(publishableKey); // Initialize Stripe with the fetched key
+  } catch (err) {
+    console.error('Error initializing Stripe:', err.message);
+    alert('Stripe initialization failed. Please try again later.');
+  }
+})();
+
 $("subscribe-btn").onclick = async () => {
   if (!token) return alert("Login first");
+  if (!stripe) return alert("Stripe is not initialized. Please try again later.");
 
   try {
     const res = await fetch(API + "/payments/create-checkout-session", {
@@ -204,7 +219,6 @@ $("subscribe-btn").onclick = async () => {
     if (!res.ok) throw new Error('Could not create checkout session');
     const { id } = await res.json();
 
-    const stripe = Stripe(window.STRIPE_PUBLISHABLE_KEY);
     const { error } = await stripe.redirectToCheckout({ sessionId: id });
     if (error) alert(error.message);
   } catch (err) {
