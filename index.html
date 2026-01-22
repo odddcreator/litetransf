@@ -48,6 +48,12 @@
       <p>• 50 uploads/day instead of 10<br>• 1 GB files instead of 20 MB<br>• Files never expire<br>• 20,000 characters text instead of 1,000</p>
 
       <button id="subscribe-btn">Subscribe Now</button>
+      <form action="/create-checkout-session" method="POST">
+        <!-- Note: If using PHP set the action to /create-checkout-session.php -->
+
+        <input type="hidden" name="priceId" value="price_G0FvDp6vZvdwRZ" />
+        <button type="submit">Checkout</button>
+      </form>
       <p id="premium-status">You are on the Free plan</p>
     </section>
   </main>
