@@ -194,12 +194,12 @@ let stripe;
 
 (async () => {
   try {
-    const res = await fetch(`${API}/stripe-key`); // Fetch the publishable key from the backend
+    const res = await fetch(`${API}/payments/stripe-key`); // Updated path
     if (!res.ok) throw new Error('Failed to fetch Stripe publishable key');
     const { publishableKey } = await res.json();
 
-    // Ensure the Stripe object is initialized with the fetched key
-    stripe = window.Stripe(publishableKey); // Use `window.Stripe` to ensure it's globally available
+    // Use window.Stripe to access the global Stripe constructor
+    stripe = window.Stripe(publishableKey);
     if (!stripe) throw new Error('Stripe initialization failed');
   } catch (err) {
     console.error('Error initializing Stripe:', err.message);
