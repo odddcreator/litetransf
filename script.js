@@ -205,7 +205,7 @@ $("subscribe-btn").onclick = async () => {
     const { id } = await res.json();
 
     // ensure Stripe.js is loaded and STRIPE_PUBLISHABLE_KEY is set in your frontend env
-    const stripe = 'pk_live_51Sr70EBySkslM2QSfzWkEKfuPsFswmrLRiqnflEFI5ad210noXyK5qWTCWVuL461YIIJ1wh7E6F1G9T1BXhwVODp00iocxZPIu';
+    const stripe = Stripe('pk_live_51Sr70EBySkslM2QSfzWkEKfuPsFswmrLRiqnflEFI5ad210noXyK5qWTCWVuL461YIIJ1wh7E6F1G9T1BXhwVODp00iocxZPIu');
     const { error } = await stripe.redirectToCheckout({ sessionId: id });
     if (error) alert(error.message);
   } catch (err) {
