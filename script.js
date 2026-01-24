@@ -111,7 +111,7 @@ async function loadTexts() {
         </div>
       `).join("");
   } catch {
-    list.innerHTML = "<p>Error loading texts.</p>";
+    list.innerHTML = "<p>Session expired. Please log back in.</p>";
   }
 }
 
@@ -170,7 +170,7 @@ async function loadMedia() {
       </div>
     `;
   } catch {
-    list.innerHTML = "<p>Error loading media.</p>";
+    list.innerHTML = "<p>Session expired. Please log back in.</p>";
   }
 }
 
@@ -254,7 +254,7 @@ $("subscribe-btn").onclick = async () => {
         "Content-Type": "application/json"
       }
     });
-    if (!res.ok) throw new Error('Could not create checkout session');
+    if (!res.ok) throw new Error('Session expired. Please log back in.');
     const { id } = await res.json();
 
     const { error } = await stripe.redirectToCheckout({ sessionId: id });
