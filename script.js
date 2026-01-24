@@ -126,14 +126,38 @@ async function loadMedia() {
     const items = await res.json();
     const media = items.filter(i => i.type === "media");
 
-    list.innerHTML = media.length === 0
-      ? "<p>No media yet.</p>"
-      : media.map(m => `
-        <div class="item">
-          <button onclick="downloadMedia('${m._id}')">Download</button>
-          <small>${new Date(m.timestamp).toLocaleString()}</small>
-        </div>
-      `).join("");
+    if (media.length === 0) {
+      list.innerHTML = "<p>No media yet.</p>";
+      return;
+    }
+
+    // Grid layout with previews and hover download button
+    list.innerHTML = `
+      <div class="media-grid">
+        ${media.map(m => {
+          // Guess preview type by mimeType or filename
+          const isImage = m.mimeType?.startsWith("image/");
+          const isVideo = m.mimeType?.startsWith("video/");
+          // For preview, use a download endpoint with a temp token (could be improved)
+          const previewUrl = `${API}/uploads/download/${m._id}?preview=1&token=${token}`;
+          return `
+            <div class="media-item" onmouseenter="this.classList.add('hover')" onmouseleave="this.classList.remove('hover')">
+              <div class="media-preview">
+                ${
+                  isImage
+                    ? `<img src="${previewUrl}" alt="preview" />`
+                    : isVideo
+                      ? `<video src="${previewUrl}" controls muted preload="metadata"></video>`
+                      : `<div class="file-icon">📄</div>`
+                }
+                <button class="download-btn" onclick="downloadMedia('${m._id}'); event.stopPropagation();">⬇️ Download</button>
+              </div>
+              <small>${m.originalName || "Media"}<br>${new Date(m.timestamp).toLocaleString()}</small>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
   } catch {
     list.innerHTML = "<p>Error loading media.</p>";
   }
