@@ -183,4 +183,19 @@ button:hover {
   pointer-events: auto;
 }
 
+.copy-btn {
+  margin: 4px 0 8px 0;
+  padding: 4px 10px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  font-size: 13px;
+}
+.copy-btn:hover {
+  background: #0056b3;
+}
+
 .small { font-size: 0.85rem; color: #777; margin-top: 16px; }

@@ -106,6 +106,7 @@ async function loadTexts() {
       : texts.map(t => `
         <div class="item">
           <pre>${t.content.substring(0, 300)}${t.content.length > 300 ? "..." : ""}</pre>
+          <button class="copy-btn" onclick="copyTextToClipboard(\`${t.content.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">📋 Copy</button>
           <small>${new Date(t.timestamp).toLocaleString()}</small>
         </div>
       `).join("");
@@ -113,6 +114,16 @@ async function loadTexts() {
     list.innerHTML = "<p>Error loading texts.</p>";
   }
 }
+
+// Add this function globally so it can be called from inline onclick
+window.copyTextToClipboard = async function(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied to clipboard!");
+  } catch (err) {
+    alert("Copy failed: " + err.message);
+  }
+};
 
 async function loadMedia() {
   const list = $("media-list");
