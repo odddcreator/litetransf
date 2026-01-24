@@ -41,10 +41,80 @@ if (urlToken) {
   window.location.href = window.location.pathname; // clean URL
 }
 
+let userStats = null;
+
+async function fetchUserStats() {
+  if (!token) return;
+  try {
+    const res = await fetch(API + "/uploads/stats", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!res.ok) throw new Error();
+    userStats = await res.json();
+    updateStatsUI();
+  } catch {
+    userStats = null;
+  }
+}
+
+function updateStatsUI() {
+  // Uploads remaining
+  $("uploads-remaining").textContent = userStats
+    ? `${userStats.maxUploads - userStats.dailyUploads}/${userStats.maxUploads} uploads remaining`
+    : "";
+
+  // Daily bytes
+  $("daily-bytes-remaining").textContent = userStats
+    ? `${formatBytes(userStats.maxDailyBytes - userStats.dailyBytes)} / ${formatBytes(userStats.maxDailyBytes)} remaining today`
+    : "";
+
+  // Total usage gauge (premium only)
+  if (userStats && userStats.isPremium && userStats.maxTotalBytes) {
+    const percent = Math.min(100, (userStats.totalBytes / userStats.maxTotalBytes) * 100);
+    $("total-usage-bar").style.width = percent + "%";
+    $("total-usage-label").textContent = `${formatBytes(userStats.totalBytes)} / ${formatBytes(userStats.maxTotalBytes)}`;
+    $("total-usage-container").style.display = "";
+  } else {
+    $("total-usage-container").style.display = "none";
+  }
+
+  // Media hint
+  $("media-hint").textContent = userStats
+    ? `Max file size: ${formatBytes(userStats.maxFileSize)}`
+    : "";
+
+  // Text counter
+  const maxLen = userStats ? userStats.maxTextLen : 1000;
+  $("text-counter").textContent = `0 / ${maxLen}`;
+}
+
+function formatBytes(bytes) {
+  if (bytes >= 1024 ** 3) return (bytes / 1024 ** 3).toFixed(2) + " GB";
+  if (bytes >= 1024 ** 2) return (bytes / 1024 ** 2).toFixed(2) + " MB";
+  if (bytes >= 1024) return (bytes / 1024).toFixed(2) + " KB";
+  return bytes + " B";
+}
+
+// Call fetchUserStats on login and tab switch
+if (token) fetchUserStats();
+$$(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (token) fetchUserStats();
+  });
+});
+
 // ── Upload ─────────────────────────────────────────────
 $("upload-text").onclick = async () => {
+  if (!userStats) return alert("Stats not loaded");
   const text = $("text-input").value.trim();
   if (!text) return alert("Enter some text");
+  if (userStats.dailyUploads >= userStats.maxUploads)
+    return alert("Daily upload limit reached");
+  if (text.length > userStats.maxTextLen)
+    return alert(`Text too long (max ${userStats.maxTextLen} chars)`);
+  const textBytes = new TextEncoder().encode(text).length;
+  if (userStats.dailyBytes + textBytes > userStats.maxDailyBytes)
+    return alert("Daily upload size exceeded");
 
   try {
     const res = await fetch(API + "/uploads/text", {
@@ -64,8 +134,15 @@ $("upload-text").onclick = async () => {
 };
 
 $("upload-file").onclick = async () => {
+  if (!userStats) return alert("Stats not loaded");
   const file = $("file-input").files[0];
   if (!file) return alert("Select a file");
+  if (userStats.dailyUploads >= userStats.maxUploads)
+    return alert("Daily upload limit reached");
+  if (file.size > userStats.maxFileSize)
+    return alert(`File too large (max ${formatBytes(userStats.maxFileSize)})`);
+  if (userStats.dailyBytes + file.size > userStats.maxDailyBytes)
+    return alert("Daily upload size exceeded");
   if (!token) return alert("Not authenticated — please sign in");
 
   // brief debug: show partial token in console

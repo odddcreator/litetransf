@@ -198,4 +198,7 @@ button:hover {
   background: #0056b3;
 }
 
+#total-usage-container { max-width: 400px; margin: 0 auto 8px auto; }
+#total-usage-bar { transition: width 0.5s; }
+
 .small { font-size: 0.85rem; color: #777; margin-top: 16px; }
