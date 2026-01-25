@@ -384,7 +384,7 @@ let stripe;
     if (!stripe) throw new Error('Stripe initialization failed');
   } catch (err) {
     console.error('Error initializing Stripe:', err.message);
-    alert('Stripe initialization failed. Please try again later.');
+    // Silently fail - Stripe is only needed for premium subscriptions
   }
 })();
 
