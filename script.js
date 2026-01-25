@@ -57,6 +57,12 @@ async function fetchUserStats() {
   }
 }
 
+$("text-input").addEventListener("input", () => {
+  const val = $("text-input").value;
+  const maxLen = userStats ? userStats.maxTextLen : 1000;
+  $("text-counter").textContent = `${val.length} / ${maxLen}`;
+});
+
 function updateStatsUI() {
   // Uploads remaining
   $("uploads-remaining").textContent = userStats
@@ -128,6 +134,7 @@ $("upload-text").onclick = async () => {
     if (!res.ok) throw new Error(await res.text());
     alert("Text uploaded!");
     $("text-input").value = "";
+    fetchUserStats();
   } catch (err) {
     alert("Error: " + err.message);
   }
@@ -160,6 +167,7 @@ $("upload-file").onclick = async () => {
     if (!res.ok) throw new Error(await res.text());
     alert("File uploaded!");
     $("file-input").value = "";
+    fetchUserStats();
   } catch (err) {
     alert("Error: " + err.message);
   }
