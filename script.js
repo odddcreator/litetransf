@@ -234,16 +234,14 @@ async function loadMedia() {
           // Guess preview type by mimeType or filename
           const isImage = m.mimeType?.startsWith("image/");
           const isVideo = m.mimeType?.startsWith("video/");
-          // For preview, use a download endpoint with a temp token (could be improved)
-          const previewUrl = `${API}/uploads/download/${m._id}?preview=1&token=${token}`;
           return `
-            <div class="media-item" onmouseenter="this.classList.add('hover')" onmouseleave="this.classList.remove('hover')">
+            <div class="media-item" data-id="${m._id}" onmouseenter="this.classList.add('hover')" onmouseleave="this.classList.remove('hover')">
               <div class="media-preview">
                 ${
                   isImage
-                    ? `<img src="${previewUrl}" alt="preview" />`
+                    ? `<img data-media-id="${m._id}" alt="preview" />`
                     : isVideo
-                      ? `<video src="${previewUrl}" controls muted preload="metadata"></video>`
+                      ? `<video data-media-id="${m._id}" controls muted preload="metadata"></video>`
                       : `<div class="file-icon">📄</div>`
                 }
                 <button class="download-btn" onclick="downloadMedia('${m._id}'); event.stopPropagation();">⬇️ Download</button>
@@ -254,6 +252,31 @@ async function loadMedia() {
         }).join("")}
       </div>
     `;
+
+    // Now fetch and set preview URLs for images and videos
+    for (const m of media) {
+      const isImage = m.mimeType?.startsWith("image/");
+      const isVideo = m.mimeType?.startsWith("video/");
+      
+      if (isImage || isVideo) {
+        try {
+          const previewRes = await fetch(`${API}/uploads/download/${m._id}`, {
+            headers: { "Authorization": "Bearer " + token }
+          });
+          if (previewRes.ok) {
+            const blob = await previewRes.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            
+            const element = document.querySelector(`[data-media-id="${m._id}"]`);
+            if (element) {
+              element.src = blobUrl;
+            }
+          }
+        } catch (err) {
+          console.error(`Failed to load preview for ${m._id}:`, err);
+        }
+      }
+    }
   } catch {
     list.innerHTML = "<p>Session expired. Please log back in.</p>";
   }
