@@ -192,6 +192,7 @@ async function loadTexts() {
         <div class="item">
           <pre>${t.content.substring(0, 300)}${t.content.length > 300 ? "..." : ""}</pre>
           <button class="copy-btn" onclick="copyTextToClipboard(\`${t.content.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">📋 Copy</button>
+          <button class="delete-btn" onclick="deleteItem('${t._id}', 'text')">🗑️ Delete</button>
           <small>${new Date(t.timestamp).toLocaleString()}</small>
         </div>
       `).join("");
@@ -207,6 +208,37 @@ window.copyTextToClipboard = async function(text) {
     alert("Copied to clipboard!");
   } catch (err) {
     alert("Copy failed: " + err.message);
+  }
+};
+
+// Add delete function globally
+window.deleteItem = async function(id, type) {
+  if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
+  
+  try {
+    const res = await fetch(`${API}/uploads/delete/${id}`, {
+      method: 'DELETE',
+      headers: { "Authorization": "Bearer " + token }
+    });
+    
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to delete');
+    }
+    
+    alert(`${type === 'text' ? 'Text' : 'Media'} deleted successfully!`);
+    
+    // Reload the appropriate list
+    if (type === 'text') {
+      loadTexts();
+    } else {
+      loadMedia();
+    }
+    
+    // Refresh stats
+    fetchUserStats();
+  } catch (err) {
+    alert("Delete failed: " + err.message);
   }
 };
 
@@ -245,6 +277,9 @@ async function loadMedia() {
                       : `<div class="file-icon">📄</div>`
                 }
                 <button class="download-btn" onclick="downloadMedia('${m._id}'); event.stopPropagation();">⬇️ Download</button>
+              </div>
+              <div class="media-actions">
+                <button class="delete-btn" onclick="deleteItem('${m._id}', 'media'); event.stopPropagation();">🗑️</button>
               </div>
               <small>${m.originalName || "Media"}<br>${new Date(m.timestamp).toLocaleString()}</small>
             </div>

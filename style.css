@@ -198,6 +198,40 @@ button:hover {
   background: #0056b3;
 }
 
+.delete-btn {
+  margin: 4px 4px 8px 0;
+  padding: 4px 10px;
+  border: none;
+  background: #dc3545;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  font-size: 13px;
+}
+.delete-btn:hover {
+  background: #c82333;
+}
+
+.media-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+}
+
+.media-item .media-actions .delete-btn {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.media-item:hover .media-actions .delete-btn {
+  opacity: 1;
+}
+
 #total-usage-container { max-width: 400px; margin: 0 auto 8px auto; }
 #total-usage-bar { transition: width 0.5s; }
 
