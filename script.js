@@ -260,8 +260,11 @@ async function loadMedia() {
       
       if (isImage || isVideo) {
         try {
-          const previewRes = await fetch(`${API}/uploads/download/${m._id}`, {
-            headers: { "Authorization": "Bearer " + token }
+          const previewRes = await fetch(`${API}/uploads/download/${m._id}?preview=1`, {
+            headers: { 
+              "Authorization": "Bearer " + token,
+              "X-Preview": "true"
+            }
           });
           if (previewRes.ok) {
             const blob = await previewRes.blob();
