@@ -19,13 +19,16 @@ $$(".tab").forEach(btn => {
 });
 
 // ── Auth ───────────────────────────────────────────────
-if (!token) {
+// LOCAL DEV MODE: Set to true to bypass login for layout editing
+const LOCAL_DEV_MODE = false;
+
+if (!token && !LOCAL_DEV_MODE) {
   $("login-screen").classList.remove("hidden");
   $("app").classList.add("hidden");
 } else {
   $("login-screen").classList.add("hidden");
   $("app").classList.remove("hidden");
-  checkPremium();
+  if (token) checkPremium();
 }
 
 $("google-login").addEventListener("click", () => {
