@@ -9,6 +9,8 @@ body {
   background: #0a0a0a;
   color: #ddd;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -18,6 +20,7 @@ header {
   padding-right: 10vw;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   text-align: center;
   border-bottom: 1px solid #222;
 }
@@ -28,6 +31,21 @@ header div {
   gap: 12px;
 }
 
+header a {
+  display: block;
+  line-height: 0;
+}
+
+.logo {
+  height: 50px;
+  max-width: 250px;
+  object-fit: contain;
+  transition: opacity 0.2s;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
 
 h1 {
   font-size: 2.1rem;
@@ -186,7 +204,7 @@ input[type="file"] {
 #login-screen {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: #000 url('img/wallpaper.png') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -196,7 +214,9 @@ input[type="file"] {
 .login-box {
   text-align: center;
   padding: 40px 24px;
-  background: #111;
+  background: #87878715;
+  filter: drop-shadow(0 0 8px #00000080);
+  border: 1px solid #838383;
   border-radius: 12px;
   max-width: 360px;
   width: 90%;
@@ -215,6 +235,7 @@ input[type="file"] {
   padding: 14px 32px;
   margin: 24px 0;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 #google-login:hover {
@@ -259,6 +280,7 @@ input[type="file"] {
   gap: 16px;
 }
 .media-item {
+  max-width: 250px;
   position: relative;
   background: #fafbfc;
   border-radius: 8px;
@@ -530,4 +552,29 @@ input[type="file"] {
 
 .right {
   color: #4caf50;
+}
+
+/* Main content area - grows to push footer down */
+main, #login-screen {
+  flex: 1;
+}
+
+/* Footer */
+footer {
+  background: #111;
+  padding: 16px;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  text-align: center;
+  border-top: 1px solid #222;
+  margin-top: auto;
+}
+
+footer p {
+  z-index: -10;
+  margin: 0;
+  font-size: 0.85rem; 
+  color: #777;
+  padding: 0;
+  color: #888;
 }
