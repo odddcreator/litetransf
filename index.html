@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LiteTransf – Quick Transfer</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -12,7 +13,7 @@
     <h1>LITETRANSF</h1>
     <div>
     <button id="logout-btn" class="hidden">🔴  Logout</button>
-    <button class="tab premium-btn" data-tab="premium">♛  Premium</button>
+    <button id="premium-btn" class="premium-btn">♛  Premium</button>
     </div>
   </header>
 
@@ -25,19 +26,20 @@
 
     <!-- UPLOAD tab -->
     <section id="upload" class="tab-content active">
+      <p>
       <h2>Upload Text</h2>
-      <div>
         <textarea id="text-input" maxlength="20000"></textarea>
-        <p id="text-counter" style="font-size:12px;color:#888;">0 / 1000</p>
+        <div id="text-counter" style="font-size:12px;color:#888;">0 / 1000</div>
         <button id="upload-text">Upload Text</button>
-      </div>
-      <h2>Upload File</h2>
-      <div>
-        <input type="file" id="file-input" />
-        <p id="media-hint" style="font-size:12px;color:#888;">Max file size: 20MB</p>
-        <button id="upload-file">Upload File</button>
-        <p id="daily-bytes-remaining" style="font-size:12px;color:#888;margin-top:4px;"></p>
-      </div>
+      </p>
+
+      <p>
+        <h2>Upload File</h2>
+          <input type="file" id="file-input" />
+          <div id="media-hint" style="font-size:12px;color:#888;">Max file size: 20MB</div>
+          <button id="upload-file">Upload File</button>
+          <div id="daily-bytes-remaining" style="font-size:12px;color:#888;margin-top:4px;"></div>
+      </p>
       <div id="uploads-remaining" style="margin-top:8px;font-weight:bold;"></div>
       
       <!-- ...at the top of your app, for premium users only... -->
@@ -60,21 +62,44 @@
     <section id="media" class="tab-content">
       <div id="media-list"></div>
     </section>
-
-    <!-- PREMIUM tab -->
-    <section id="premium" class="tab-content">
-      <h2>Go Premium – $9/month</h2>
-      <p>• 50 uploads/day instead of 10<br>• 1 GB files instead of 20 MB<br>• Files never expire<br>• 20,000 characters text instead of 1,000</p>
-
-      <button id="subscribe-btn">Subscribe Now</button>
-      <form action="/create-checkout-session" method="POST">
-        <!-- Note: If using PHP set the action to /create-checkout-session.php -->
-
-        <input type="hidden" name="priceId" value="price_G0FvDp6vZvdwRZ" />
-      </form>
-      <p id="premium-status">You are on the Free plan</p>
-    </section>
   </main>
+
+  <!-- PREMIUM OVERLAY -->
+  <div id="premium-overlay" class="hidden">
+    <div class="premium-overlay-bg"></div>
+    <div class="premium-container">
+      <button id="close-premium" class="close-premium-btn">✕</button>
+      
+      <div class="pricing-cards">
+        <div class="premium-card free-card">
+          <div class="premium-card-header">
+            <h2>Free</h2>
+          </div>
+          <div class="premium-features">
+            <p><i class="fa-solid fa-circle-xmark wrong"></i> 10 uploads/day</p>
+            <p><i class="fa-solid fa-circle-xmark wrong"></i> 20 MB max file upload</p>
+            <p><i class="fa-solid fa-circle-xmark wrong"></i> 100 MB max daily upload</p>
+            <p><i class="fa-solid fa-circle-xmark wrong"></i> Files expire after 1 day</p>
+            <p><i class="fa-solid fa-circle-xmark wrong"></i> 1,000 max characters text upload</p>
+          </div>
+        </div>
+        
+        <div class="premium-card premium-paid-card">
+          <div class="premium-card-header">
+            <h2>Premium – $9/month</h2>
+          </div>
+          <div class="premium-features">
+            <p><i class="fa-solid fa-circle-check right"></i> 50 uploads/day</p>
+            <p><i class="fa-solid fa-circle-check right"></i> 1 GB max file upload</p>
+            <p><i class="fa-solid fa-circle-check right"></i> 5 GB max daily upload</p>
+            <p><i class="fa-solid fa-circle-check right"></i> Files never expire (250 GB total storage)</p>
+            <p><i class="fa-solid fa-circle-check right"></i> 20,000 max characters text upload</p>
+          </div>
+          <button id="subscribe-btn">Subscribe Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="login-screen">
     <div class="login-box">

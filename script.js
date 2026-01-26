@@ -18,9 +18,23 @@ $$(".tab").forEach(btn => {
   });
 });
 
+// ── Premium Overlay ────────────────────────────────────
+// Premium button click handler is set dynamically in updatePremiumBadge()
+
+$("close-premium").addEventListener("click", () => {
+  $("premium-overlay").classList.add("hidden");
+});
+
+// Close overlay when clicking on background
+$("premium-overlay").addEventListener("click", (e) => {
+  if (e.target.classList.contains("premium-overlay-bg")) {
+    $("premium-overlay").classList.add("hidden");
+  }
+});
+
 // ── Auth ───────────────────────────────────────────────
 // LOCAL DEV MODE: Set to true to bypass login for layout editing
-const LOCAL_DEV_MODE = false;
+const LOCAL_DEV_MODE = true;
 
 if (!token && !LOCAL_DEV_MODE) {
   $("login-screen").classList.remove("hidden");
@@ -95,6 +109,31 @@ function updateStatsUI() {
   // Text counter
   const maxLen = userStats ? userStats.maxTextLen : 1000;
   $("text-counter").textContent = `0 / ${maxLen}`;
+
+  // Premium button/badge in header
+  updatePremiumBadge();
+}
+
+function updatePremiumBadge() {
+  const premiumBtn = $("premium-btn");
+  
+  if (userStats && userStats.isPremium) {
+    // Show premium badge for premium users
+    premiumBtn.textContent = "♛  Premium Account";
+    premiumBtn.classList.add("premium-badge");
+    premiumBtn.classList.remove("premium-btn");
+    premiumBtn.style.cursor = "default";
+    premiumBtn.onclick = null;
+  } else {
+    // Show premium button for free users
+    premiumBtn.textContent = "♛  Premium";
+    premiumBtn.classList.add("premium-btn");
+    premiumBtn.classList.remove("premium-badge");
+    premiumBtn.style.cursor = "pointer";
+    premiumBtn.onclick = () => {
+      $("premium-overlay").classList.remove("hidden");
+    };
+  }
 }
 
 function formatBytes(bytes) {
@@ -193,9 +232,9 @@ async function loadTexts() {
       ? "<p>No texts yet.</p>"
       : texts.map(t => `
         <div class="item">
-          <pre>${t.content.substring(0, 300)}${t.content.length > 300 ? "..." : ""}</pre>
-          <button class="copy-btn" onclick="copyTextToClipboard(\`${t.content.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">📋 Copy</button>
-          <button class="delete-btn" onclick="deleteItem('${t._id}', 'text')">🗑️ Delete</button>
+          <pre>${t.content.substring(0, 300)}${t.content.length > 150 ? "..." : ""}</pre>
+          <button class="copy-btn" onclick="copyTextToClipboard(\`${t.content.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)"><i class="fa-regular fa-copy"></i></button>
+          <button class="delete-btn" onclick="deleteItem('${t._id}', 'text')"><i class="fa-solid fa-trash"></i></button>
           <small>${new Date(t.timestamp).toLocaleString()}</small>
         </div>
       `).join("");
@@ -279,10 +318,10 @@ async function loadMedia() {
                       ? `<video data-media-id="${m._id}" controls muted preload="metadata"></video>`
                       : `<div class="file-icon">📄</div>`
                 }
-                <button class="download-btn" onclick="downloadMedia('${m._id}'); event.stopPropagation();">⬇️ Download</button>
+                <button class="download-btn" onclick="downloadMedia('${m._id}'); event.stopPropagation();"><i class="fa-solid fa-arrow-down"></i></button>
               </div>
               <div class="media-actions">
-                <button class="delete-btn" onclick="deleteItem('${m._id}', 'media'); event.stopPropagation();">🗑️</button>
+                <button class="delete-btn" onclick="deleteItem('${m._id}', 'media'); event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
               </div>
               <small>${m.originalName || "Media"}<br>${new Date(m.timestamp).toLocaleString()}</small>
             </div>
